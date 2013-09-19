@@ -2,11 +2,22 @@ $('#reposHome').bind('pageinit', function(event) {
 	loadRepos();
 });
 
-function loadRepos() {
+/*function loadRepos() {
     $.ajax("https://api.github.com/legacy/repos/search/javascript").done(function(data) {
         var i, repo;
         $.each(data.repositories, function (i, repo) {
             $("#allRepos").append("<li><a href='https://github.com/" + repo.username + "/" + repo.name + "'>"
+            + "<h4>" + repo.name + "</h4>"
+            + "<p>" + repo.username + "</p></a></li>");
+        });
+        $('#allRepos').listview('refresh');
+    });
+}*/
+function loadRepos() {
+    $.ajax("https://api.github.com/legacy/repos/search/javascript").done(function(data) {
+        var i, repo;
+        $.each(data.repositories, function (i, repo) {
+            $("#allRepos").append("<li><a href='repo-detail.html?owner=" + repo.username + "&name=" + repo.name + "'>"
             + "<h4>" + repo.name + "</h4>"
             + "<p>" + repo.username + "</p></a></li>");
         });
@@ -34,6 +45,13 @@ function loadRepoDetail(owner,name) {
      });
 }
 
+ document.addEventListener("deviceready", onDeviceReady, false);
+
+// PhoneGap is loaded and it is now safe to make calls PhoneGap methods
+//
+function onDeviceReady() {
+	checkConnection();
+}
 
 function getUrlVars() {
     var vars = [], hash;
@@ -46,3 +64,19 @@ function getUrlVars() {
     }
     return vars;
 }
+
+/*************************************************************/
+ function checkConnection() {
+        var networkState = navigator.network.connection.type;
+
+        var states = {};
+        states[Connection.UNKNOWN]  = 'Unknown connection';
+        states[Connection.ETHERNET] = 'Ethernet connection';
+        states[Connection.WIFI]     = 'WiFi connection';
+        states[Connection.CELL_2G]  = 'Cell 2G connection';
+        states[Connection.CELL_3G]  = 'Cell 3G connection';
+        states[Connection.CELL_4G]  = 'Cell 4G connection';
+        states[Connection.NONE]     = 'No network connection';
+
+        alert('Connection type: ' + states[networkState]);
+    }
